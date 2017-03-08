@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "sourceRoot": "./ts",
+        "outDir": "./js"
+    },
+    "exclude": [
+        "node_modules",
+        "js"
+    ]
+}
