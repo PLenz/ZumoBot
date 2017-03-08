@@ -3,20 +3,20 @@
         <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
         <script type="text/javascript" src="js/underscore-min.js"></script>
         <script type="text/javascript" src="js/backbone-min.js"></script>
-        <!--script type="text/javascript" src="js/joystick_view.js"></script-->
-        <script type="text/javascript" src="js/http-live-player.js">;</script>
+        <script type="text/javascript" src="js/joystick_view.js"></script>
+        <script type="text/javascript" src="http-live-player.js"></script>
     </head>
     <body>
 
       <button type="button" onclick="wsavc.playStream()">Start Video</button>
-  <!--button type="button" onclick="wsavc.stopStream()">Stop Video</button-->
-  <!--button type="button" onclick="wsavc.disconnect()">Disconnect</button-->
+      <button type="button" onclick="wsavc.stopStream()">Stop Video</button>
+      <button type="button" onclick="wsavc.disconnect()">Disconnect</button>
 
 
-    <!--script type="text/html" id="joystick-view">
+    <script type="text/html" id="joystick-view">
     <canvas id="joystickCanvas" width="<%= squareSize %>" height="<%= squareSize %>" style="width: <%= squareSize %>px; height: <%= squareSize %>px;">
         </canvas>
-    </script-->
+    </script>
 
     <div id="joystickContent">
     </div>
@@ -35,7 +35,7 @@
     var wsavc = new WSAvcPlayer(canvas, 'webgl', 1, 35);
     window.wsavc = wsavc;
     wsavc.connect(uri);
-      /*  $(document).ready(function(){
+        $(document).ready(function(){
             var joystickView = new JoystickView(150, function(callbackView){
                 $("#joystickContent").append(callbackView.render().el);
                 setTimeout(function(){
@@ -56,7 +56,7 @@
 
             }, 1500);
 
-        });*/
+        });
 
     </script>
     </body>
