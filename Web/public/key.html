@@ -22,16 +22,16 @@
       };
     }
     function upFunction() {
-      send(255,0,0,0);
-    }
-    function downFunction() {
-      send(255,1,0,0);
-    }
-    function leftFunction() {
       send(0,0,255,0);
     }
-    function rightFunction() {
+    function downFunction() {
       send(0,0,255,1);
+    }
+    function leftFunction() {
+      send(255,0,0,0);
+    }
+    function rightFunction() {
+      send(255,1,0,0);
     }
     function stopFunction() {
       send(0,0,0,0);
