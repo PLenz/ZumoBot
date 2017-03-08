@@ -11,12 +11,25 @@
     <div>
       <button onclick="stopFunction()">stop</button>
     </div>
+    <div>
+      <button onclick="offFunction()">off</button>
+      <button onclick="driveFunction()">drive</button>
+      <button onclick="scanFunction()">scan</button>
+    </div>
 
     <script type="text/javascript">
     function send(x, xneg, y, yneg) {
       var connection = new WebSocket('ws://172.24.1.1:8081/ws');
       connection.onopen = function () {
-          var value = JSON.stringify([x, xneg, y, yneg])
+          var value = JSON.stringify([x, xneg, y, yneg]);
+          connection.send(value);
+          console.log(value);
+      };
+    }
+    function mode(state) {
+      var connection = new WebSocket('ws://172.24.1.1:8081/mode');
+      connection.onopen = function () {
+          var value = JSON.stringify([state]);
           connection.send(value);
           console.log(value);
       };
@@ -35,6 +48,15 @@
     }
     function stopFunction() {
       send(0,0,0,0);
+    }
+    function offFunction() {
+      mode(0);
+    }
+    function driveFunction() {
+      mode(1);
+    }
+    function scanFunction() {
+      mode(2);
     }
     </script>
   </body>

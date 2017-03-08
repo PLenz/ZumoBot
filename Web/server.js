@@ -46,6 +46,18 @@ app.ws('/ws', function(ws, req) {
   });
 });
 
+app.get('/mode', function(req, res, next){
+  console.log('get route', req.testing);
+  res.end();
+});
+
+app.ws('/mode', function(ws, req) {
+  ws.on('message', function(msg) {
+    console.log(msg);
+    wire.writeBytes(0x00,JSON.parse(msg), function(err){});
+  });
+});
+
 app.get('/index.html', function (req, res) {
    res.sendFile( __dirname + "/public/index.html" );
 })
@@ -78,4 +90,7 @@ app.get('/img/canvas.png', function (req, res) {
    res.sendFile( __dirname + "/public/img/canvas.png" );
 })
 
-app.listen(8090);
+app.listen(8081, function () {
+  console.log('App listening');
+    wire.writeBytes(0x00,[1], function(err){});
+});
