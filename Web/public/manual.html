@@ -1,0 +1,47 @@
+<html>
+  <body>
+    <div>
+      <label>x</label>
+      <input type="number" id="x"></input>
+    </div>
+    <div>
+      <label>x_neg</label>
+      <input type="checkbox" id="x_neg"></input>
+    </div>
+    <div>
+      <label>y</label>
+      <input type="number" id="y"></input>
+    </div>
+    <div>
+      <label>y_neg</label>
+      <input type="checkbox" id="y_neg"></input>
+    </div>
+    <button onclick="sendFunction()">send</button>
+
+    <script type="text/javascript">
+    function send(x, xneg, y, yneg) {
+      var connection = new WebSocket('ws://172.24.1.1:8081/ws');
+      connection.onopen = function () {
+          var value = JSON.stringify([x, xneg, y, yneg])
+          connection.send(value);
+          console.log(value);
+      };
+    }
+    function sendFunction() {
+      var x_value = parseInt(document.getElementById('x').value,10);
+
+      var x_neg_value = 0;
+      if (document.getElementById('x_neg').checked==true)
+        x_neg_value = 1;
+
+      var y_value = parseInt(document.getElementById('y').value,10);
+
+      var y_neg_value = 0;
+      if (document.getElementById('y_neg').checked==true)
+        y_neg_value = 1;
+
+      send(x_value, x_neg_value, y_value, y_neg_value);
+    }
+    </script>
+  </body>
+</html>
