@@ -51,6 +51,7 @@ void receiveEvent(int count) {
       else
         throttle = y;
 
+      Serial.println("x: " + String(x) + " x_neg: " + String(x_neg) + " y: " + String(y) + " y_neg: " + String(y_neg));
       Serial.println("direc - x: " + String(direc));
       Serial.println("throttle - y: " + String(throttle));
 

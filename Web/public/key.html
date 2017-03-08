@@ -1,0 +1,41 @@
+<html>
+  <body>
+    <div>
+      <button onclick="leftFunction()">left</button>
+      <button onclick="rightFunction()">right</button>
+    </div>
+    <div>
+      <button onclick="upFunction()">up</button>
+      <button onclick="downFunction()">down</button>
+    </div>
+    <div>
+      <button onclick="stopFunction()">stop</button>
+    </div>
+
+    <script type="text/javascript">
+    function send(x, xneg, y, yneg) {
+      var connection = new WebSocket('ws://172.24.1.1:8081/ws');
+      connection.onopen = function () {
+          var value = JSON.stringify([x, xneg, y, yneg])
+          connection.send(value);
+          console.log(value);
+      };
+    }
+    function upFunction() {
+      send(255,0,0,0);
+    }
+    function downFunction() {
+      send(255,1,0,0);
+    }
+    function leftFunction() {
+      send(0,0,255,0);
+    }
+    function rightFunction() {
+      send(0,0,255,1);
+    }
+    function stopFunction() {
+      send(0,0,0,0);
+    }
+    </script>
+  </body>
+</html>
