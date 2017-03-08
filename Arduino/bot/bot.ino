@@ -1,36 +1,59 @@
 #include <Wire.h>
 #include <ZumoMotors.h>
+#include <ZumoReflectanceSensorArray.h>
+#include <QTRSensors.h>
+#include <ZumoBuzzer.h>
+
+byte LED = 13;
 
 ZumoMotors motors;
+ZumoReflectanceSensorArray reflectanceSensors;
+ZumoBuzzer buzzer;
 
 int leftMotorScaled = 0;
 int rightMotorScaled = 0;
 int deadZone = 10;
 
+int state = 1; //0=off, 1=drive, 2=lineFollower
+
 void setup() {
+  reflectanceSensors.init();
+
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED, LOW);
   Wire.begin(8);
   Wire.onReceive(receiveEvent);
   Serial.begin(9600);
+
+  buzzer.play("L16 cdegreg4");
 }
 
 void loop() {
-  if (abs(leftMotorScaled) > deadZone)
-    motors.setLeftSpeed(leftMotorScaled);
-  else
-    motors.setLeftSpeed(0);
+  if (state == 1) {
 
-  if (abs(rightMotorScaled) > deadZone)
-    motors.setRightSpeed(rightMotorScaled);
-  else
-    motors.setRightSpeed(0);
-  delay(10);
+  } else if (state == 2) {
+    if (abs(leftMotorScaled) > deadZone)
+      motors.setLeftSpeed(leftMotorScaled);
+    else
+      motors.setLeftSpeed(0);
+
+    if (abs(rightMotorScaled) > deadZone)
+      motors.setRightSpeed(rightMotorScaled);
+    else
+      motors.setRightSpeed(0);
+    delay(10);
+  }
 }
 
 void receiveEvent(int count) {
   int mode = Wire.read();
-  if (mode == 1) {
+  if (mode == 0) {
+    if (count == 2) {
+      state = Wire.read();
+    }
+  } else if (mode == 1) {
+    
     if (count == 5) {
-
       int throttle, direc = 0;
 
       int x = Wire.read();
