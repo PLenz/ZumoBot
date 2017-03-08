@@ -1,19 +1,28 @@
-var i2c = require('i2c');
-var address = 0x08;
-var wire = new i2c(address, {device: '/dev/i2c-1'});
+"use strict";
 
-var express = require('express');
-var app = express();
-var expressWs = require('express-ws')(app);
-app.use(express.static('public'));
+const http    = require('http');
+const i2c = require('i2c');
+const address = 0x08;
+const wire = new i2c(address, {device: '/dev/i2c-1'});
+const WebStreamerServer = require('./lib/raspivid');
 
-app.use(function (req, res, next) {
+const express = require('express');
+const app = express();
+const expressWs = require('express-ws')(app);
+
+const server  = http.createServer(app);
+const silence = new WebStreamerServer(server);
+
+app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/vendor/dist'));
+
+app.use((req, res, next) => {
   console.log('middleware');
   req.testing = 'testing';
   return next();
 });
 
-app.get('/', function (req, res) {
+app.get('/',(req, res) => {
    res.sendFile( __dirname + "/public/index.html" );
 })
 
