@@ -1,3 +1,5 @@
 WebServer/node_modules
 WebServer/typings
 WebServer/js
+Web/server.js
+Web/public/js/.Rhistory

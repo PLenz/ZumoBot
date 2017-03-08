@@ -45,16 +45,28 @@ app.get('/js/backbone-min.js', function (req, res) {
    res.sendFile( __dirname + "/public/js/backbone-min.js" );
 })
 
+app.get('/js/backbone-min.map', function (req, res) {
+   res.sendFile( __dirname + "/public/js/backbone-min.map" );
+})
+
 app.get('/js/joystick_view.js', function (req, res) {
    res.sendFile( __dirname + "/public/js/joystick_view.js" );
 })
 
-app.get('/js/jquery-1.11.2.min.js', function (req, res) {
-   res.sendFile( __dirname + "/public/js/jquery-1.11.2.min.js" );
+app.get('/js/jquery-3.1.1.min.js', function (req, res) {
+   res.sendFile( __dirname + "/public/js/jquery-3.1.1.min.js" );
+})
+
+app.get('/js/jquery-3.1.1.min.map', function (req, res) {
+   res.sendFile( __dirname + "/public/js/jquery-3.1.1.min.map" );
 })
 
 app.get('/js/underscore-min.js', function (req, res) {
    res.sendFile( __dirname + "/public/js/underscore-min.js" );
+})
+
+app.get('/js/underscore-min.map', function (req, res) {
+   res.sendFile( __dirname + "/public/js/underscore-min.map" );
 })
 
 app.get('/img/button.png', function (req, res) {

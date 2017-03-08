@@ -5,7 +5,7 @@
         "noImplicitAny": false,
         "sourceMap": true,
         "sourceRoot": "./ts",
-        "outDir": "./js"
+        "outDir": "../Web"
     },
     "exclude": [
         "node_modules",
