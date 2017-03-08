@@ -79,7 +79,7 @@ app.get('/js/underscore-min.js', function (req, res) {
 })
 
 app.get('/js/http-live-player.js', function (req, res) {
-   res.sendFile( __dirname + "/vendor/dist/js/http-live-player.js" );
+   res.sendFile( __dirname + "/vendor/dist/http-live-player.js" );
 })
 
 app.get('/img/button.png', function (req, res) {
