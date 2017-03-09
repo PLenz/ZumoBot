@@ -1,101 +1,205 @@
-<html>
-    <head>
-        <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
-        <script type="text/javascript" src="js/underscore-min.js"></script>
-        <script type="text/javascript" src="js/backbone-min.js"></script>
-        <script type="text/javascript" src="js/zumo.js"></script>
-        <script type="text/javascript" src="js/joystick_view.js"></script>
-        <script type="text/javascript" src="http-live-player.js"></script>
-    </head>
-    <body>
+<!doctype html>
+<html lang=en>
 
-<style>
-    .sixteen-nine {
-  position: relative;
-}
-.sixteen-nine:before {
-  display: block;
-  content: "";
-  width: 100%;
-  padding-top: 56.25%;
-}
-.sixteen-nine > .content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-    #joystickContent{
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        z-index: 1;
-    }
-    
-    #joystickCanvas{
+<head>
+    <meta charset=utf-8>
+    <meta content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0," />
+    <link rel="stylesheet" href="css/index.css">
+    <script type="text/javascript" src="js/zumo.js"></script>
+    <script type="text/javascript" src="http-live-player.js"></script>
+    <script type="text/javascript" src="js/touch-emulator.js"></script>
+    <script type="text/javascript" src="js/Vector2.js"></script>
+    <title>test</title>
+</head>
 
-    }
-
-</style>
-
-
-    <script type="text/html" id="joystick-view">
-    <canvas id="joystickCanvas" width="<%= squareSize %>" height="<%= squareSize %>" style="width: <%= squareSize %>px; height: <%= squareSize %>px;">
-        </canvas>
-    </script>
-
-    <div id="joystickContent">
-    </div>
-    <div>
-        x: <span id="xVal"></span><br/>
-        y: <span id="yVal"></span><br/>
+<body>
+    <div id="content" class="content">
     </div>
 
-    <div class="sixteen-nine">
-        <div id="content" class="content">
-        </div>
-    </div>
+    <script>
+        var content = document.getElementById("content");
+        var canvas = document.createElement("canvas");
+        canvas.style.cssText = 'position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;';
+        content.appendChild(canvas);
 
-    <script type="text/javascript">
-    var content = document.getElementById("content");
-    var canvas = document.createElement("canvas");
-    canvas.style.cssText = 'position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;';
-    content.appendChild(canvas);
+        // Create h264 player
+        var uri = 'ws://' + location.hostname + ':8080';
+        var wsavc = new WSAvcPlayer(canvas, 'webgl', 1, 35);
+        window.wsavc = wsavc;
+        wsavc.connect(uri);
 
-    // Create h264 player
-    var uri = 'ws://'+ location.hostname +':8080';
-    var wsavc = new WSAvcPlayer(canvas, 'webgl', 1, 35);
-    window.wsavc = wsavc;
-    wsavc.connect(uri);
-
-    function startStream(){
-        if(wsavc && wsavc.ws.readyState === 1){
-            wsavc.playStream();
+        function startStream() {
+            if (wsavc && wsavc.ws.readyState === 1) {
+                wsavc.playStream();
+            } else {
+                setTimeout(startStream, 60);
+            }
         }
-        else{
-            setTimeout(startStream, 60);
+
+        startStream();
+
+        if (is_touch_device() == false) {
+            TouchEmulator();
         }
-    }
+        var canvas,
+            c, // c is the canvas' context 2D
+            container,
+            halfWidth,
+            halfHeight,
+            leftTouchID = -1,
+            leftTouchPos = new Vector2(0, 0),
+            leftTouchStartPos = new Vector2(0, 0),
+            leftVector = new Vector2(0, 0);
 
-        $(document).ready(function(){
-            var joystickView = new JoystickView(150, function(callbackView){
-                $("#joystickContent").append(callbackView.render().el);
-                setTimeout(function(){
-                    callbackView.renderSprite();
-                }, 0);
-            });
-            joystickView.bind("verticalMove", function(y){
-                $("#yVal").html(y);
-            });
-            joystickView.bind("horizontalMove", function(x){
-                $("#xVal").html(x);
-            });
 
-             startStream();
+        setupCanvas();
 
-        });
+        var touchable = 'createTouch' in document,
+            touches = [];
+
+        setInterval(draw, 1000 / 35);
+
+        if (touchable) {
+            canvas.addEventListener('touchstart', onTouchStart, false);
+            canvas.addEventListener('touchmove', onTouchMove, false);
+            canvas.addEventListener('touchend', onTouchEnd, false);
+
+            window.onorientationchange = resetCanvas;
+            window.onresize = resetCanvas;
+        }
+
+        function is_touch_device() {
+            try {
+                document.createEvent("TouchEvent");
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function resetCanvas(e) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            halfWidth = canvas.width / 2;
+            halfHeight = canvas.height / 2;
+
+            window.scrollTo(0, 0);
+        }
+
+        function draw() {
+
+            c.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (touchable) {
+
+                for (var i = 0; i < touches.length; i++) {
+
+                    var touch = touches[i];
+
+                    if (touch.identifier == leftTouchID) {
+                        c.beginPath();
+                        c.strokeStyle = "cyan";
+                        c.lineWidth = 6;
+                        c.arc(leftTouchStartPos.x, leftTouchStartPos.y, 40, 0, Math.PI * 2, true);
+                        c.stroke();
+                        c.beginPath();
+                        c.strokeStyle = "cyan";
+                        c.lineWidth = 2;
+                        c.arc(leftTouchStartPos.x, leftTouchStartPos.y, 60, 0, Math.PI * 2, true);
+                        c.stroke();
+                        c.beginPath();
+                        c.strokeStyle = "cyan";
+                        c.arc(leftTouchPos.x, leftTouchPos.y, 40, 0, Math.PI * 2, true);
+                        c.stroke();
+
+                    }
+                }
+            }
+        }
+
+        function onTouchStart(e) {
+            for (var i = 0; i < e.changedTouches.length; i++) {
+                var touch = e.changedTouches[i];
+                leftTouchID = touch.identifier;
+                leftTouchStartPos.reset(touch.clientX, touch.clientY);
+                leftTouchPos.copyFrom(leftTouchStartPos);
+                leftVector.reset(0, 0);
+                continue;
+            }
+            touches = e.touches;
+        }
+
+        function onTouchMove(e) {
+
+            e.preventDefault();
+
+            for (var i = 0; i < e.changedTouches.length; i++) {
+                var touch = e.changedTouches[i];
+                if (leftTouchID == touch.identifier) {
+                    leftTouchPos.reset(touch.clientX, touch.clientY);
+                    leftVector.copyFrom(leftTouchPos);
+                    leftVector.minusEq(leftTouchStartPos);
+                    var x = leftVector.x;
+                    var y = leftVector.y;
+                    var x_neg = 0;
+                    var y_neg = 0;
+
+                    if (x > 100)
+                        x = 100;
+                    else if (x < -100)
+                        x = -100;
+                    if (y > 100)
+                        y = 100;
+                    else if (y < -100)
+                        y = -100;
+                    y = y * -1;
+
+                    if (x < 0) {
+                        x_neg = 1;
+                    }
+                    if (y < 0) {
+                        y_neg = 1;
+                    }
+                    zumo.move(parseInt(Math.abs(x * 2.55)), x_neg, parseInt(Math.abs(y * 2.55)), y_neg);
+                    break;
+                }
+            }
+
+            touches = e.touches;
+
+        }
+
+        function onTouchEnd(e) {
+
+            touches = e.touches;
+
+            for (var i = 0; i < e.changedTouches.length; i++) {
+                var touch = e.changedTouches[i];
+                if (leftTouchID == touch.identifier) {
+                    leftTouchID = -1;
+                    leftVector.reset(0, 0);
+                    zumo.move(0, 0, 0, 0);
+                    break;
+                }
+            }
+        }
+
+        function setupCanvas() {
+
+            canvas = document.createElement('canvas');
+            c = canvas.getContext('2d');
+            container = document.createElement('div');
+            container.className = "container";
+
+            document.body.appendChild(container);
+            container.appendChild(canvas);
+
+            resetCanvas();
+
+            c.strokeStyle = "#ffffff";
+            c.lineWidth = 2;
+        }
     </script>
-
-    </body>
+</body>
 </html>
