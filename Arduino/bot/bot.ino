@@ -11,12 +11,12 @@ ZumoMotors motors;
 ZumoReflectanceSensorArray reflectanceSensors;
 ZumoBuzzer buzzer;
 
-int leftMotorScaled = 0;
-int rightMotorScaled = 0;
+
 int deadZone = 10;
 int lastError = 0;
 
 byte state = 0; //0=off, 1=drive, 2=lineFollower
+byte scanmode = 0;
 
 void setup() {
   reflectanceSensors.init();
@@ -29,31 +29,20 @@ void setup() {
 }
 
 void loop() {
-  if (state == 1) {
-    if (abs(leftMotorScaled) > deadZone)
-      motors.setLeftSpeed(leftMotorScaled);
-    else
-      motors.setLeftSpeed(0);
-
-    if (abs(rightMotorScaled) > deadZone)
-      motors.setRightSpeed(rightMotorScaled);
-    else
-      motors.setRightSpeed(0);
-    delay(10);
-  } else if (state == 2) {
+  if (state == 2) {
     unsigned int sensors[6];
-    
+
     int position = reflectanceSensors.readLine(sensors);
-    
+
     int error = position - 2500;
-    
+
     int speedDifference = error / 4 + 6 * (error - lastError);
 
     lastError = error;
-    
+
     int m1Speed = MAX_SPEED + speedDifference;
     int m2Speed = MAX_SPEED - speedDifference;
-    
+
     if (m1Speed < 0)
       m1Speed = 0;
     if (m2Speed < 0)
@@ -88,15 +77,25 @@ void calibrationSensor() {
 void receiveEvent(int count) {
   int mode = Wire.read();
   if (mode == 0) {
+
     if (count == 2) {
       buzzer.play("L16 cdegreg4");
       state = Wire.read();
-      Serial.println(String(state));
-      if (state == 2)
+
+      if (state == 0) {
+
+        motors.setRightSpeed(0);
+        motors.setLeftSpeed(0);
+
+      } else if (state == 2) {
+
+        scanmode = 1;
         calibrationSensor();
+        scanmode = 0;
+
+      }
     }
   } else if (mode == 1) {
-
     if (count == 5) {
       int throttle, direc = 0;
 
@@ -132,8 +131,24 @@ void receiveEvent(int count) {
       maxMotorScale = max(leftMotorScale, rightMotorScale);
       maxMotorScale = max(1, maxMotorScale);
 
+      int leftMotorScaled = 0;
+      int rightMotorScaled = 0;
+
       leftMotorScaled = constrain(leftMotor / maxMotorScale, -400, 400);
       rightMotorScaled = constrain(rightMotor / maxMotorScale, -400, 400);
+
+      if (state == 1) {
+        if (abs(leftMotorScaled) > deadZone)
+          motors.setLeftSpeed(leftMotorScaled);
+        else
+          motors.setLeftSpeed(0);
+
+        if (abs(rightMotorScaled) > deadZone)
+          motors.setRightSpeed(rightMotorScaled);
+        else
+          motors.setRightSpeed(0);
+        delay(10);
+      }
     }
   }
 }

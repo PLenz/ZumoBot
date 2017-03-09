@@ -35,9 +35,11 @@
     }
 
     function mode(value){
-      send({mode : value});
+      send({mode : 0,
+            data : [value]
+      });
     }
-  
+
     function upFunction() {
       move(0,0,255,0);
     }

@@ -25,22 +25,22 @@ wss.on('connection', function connection(client) {
   client.on('message', function incoming(message) {
     console.log(util.inspect(message));
     const data = JSON.parse(message);
-    if(data.mode === 1){
+    if(data.mode == "0"){
+      wire.writeBytes(0x00,data.data, function(err){});
+    }
+    else if (data.mode == "1"){
       wire.writeBytes(0x01,data.data, function(err){});
     }
-    else{
-      wire.writeBytes(0x01,data.data, function(err){});
-    }
-   
+
   });
 
     client.on('close', function close() {
       try{
         console.log('Operator Disconnected');
-        wire.writeBytes(0x01,[0,0,0,0], function(err){});
+        wire.writeBytes(0x00,[0], function(err){});
       }
       catch(e){
-        
+
       }
     });
 

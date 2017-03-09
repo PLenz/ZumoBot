@@ -19,14 +19,21 @@
     <button onclick="sendFunction()">send</button>
 
     <script type="text/javascript">
-    function send(x, xneg, y, yneg) {
-      var connection = new WebSocket('ws://172.24.1.1:8081/ws');
-      connection.onopen = function () {
-          var value = JSON.stringify([x, xneg, y, yneg])
-          connection.send(value);
-          console.log(value);
-      };
+
+    function send(message) {
+      //TODO check connection readyState
+      var json = JSON.stringify(message);
+          connection.send(json);
+          console.log(message);
     }
+
+    function move(x, xneg, y, yneg){
+      send({
+              mode : 1,
+              data : [x, xneg, y, yneg]
+      });
+    }
+
     function sendFunction() {
       var x_value = parseInt(document.getElementById('x').value,10);
 
@@ -40,7 +47,7 @@
       if (document.getElementById('y_neg').checked==true)
         y_neg_value = 1;
 
-      send(x_value, x_neg_value, y_value, y_neg_value);
+      move(x_value, x_neg_value, y_value, y_neg_value);
     }
     </script>
   </body>
