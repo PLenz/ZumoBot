@@ -41,6 +41,7 @@
         if (is_touch_device() == false) {
             TouchEmulator();
         }
+
         var canvas,
             c, // c is the canvas' context 2D
             container,
@@ -50,7 +51,6 @@
             leftTouchPos = new Vector2(0, 0),
             leftTouchStartPos = new Vector2(0, 0),
             leftVector = new Vector2(0, 0);
-
 
         setupCanvas();
 
@@ -80,23 +80,16 @@
         function resetCanvas(e) {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-
             halfWidth = canvas.width / 2;
             halfHeight = canvas.height / 2;
-
             window.scrollTo(0, 0);
         }
 
         function draw() {
-
             c.clearRect(0, 0, canvas.width, canvas.height);
-
             if (touchable) {
-
                 for (var i = 0; i < touches.length; i++) {
-
                     var touch = touches[i];
-
                     if (touch.identifier == leftTouchID) {
                         c.beginPath();
                         c.strokeStyle = "cyan";
@@ -112,7 +105,6 @@
                         c.strokeStyle = "cyan";
                         c.arc(leftTouchPos.x, leftTouchPos.y, 40, 0, Math.PI * 2, true);
                         c.stroke();
-
                     }
                 }
             }
@@ -131,9 +123,7 @@
         }
 
         function onTouchMove(e) {
-
             e.preventDefault();
-
             for (var i = 0; i < e.changedTouches.length; i++) {
                 var touch = e.changedTouches[i];
                 if (leftTouchID == touch.identifier) {
@@ -149,6 +139,7 @@
                         x = 100;
                     else if (x < -100)
                         x = -100;
+                    x = x * -1;
                     if (y > 100)
                         y = 100;
                     else if (y < -100)
@@ -165,15 +156,11 @@
                     break;
                 }
             }
-
             touches = e.touches;
-
         }
 
         function onTouchEnd(e) {
-
             touches = e.touches;
-
             for (var i = 0; i < e.changedTouches.length; i++) {
                 var touch = e.changedTouches[i];
                 if (leftTouchID == touch.identifier) {
@@ -186,17 +173,13 @@
         }
 
         function setupCanvas() {
-
             canvas = document.createElement('canvas');
             c = canvas.getContext('2d');
             container = document.createElement('div');
             container.className = "container";
-
             document.body.appendChild(container);
             container.appendChild(canvas);
-
             resetCanvas();
-
             c.strokeStyle = "#ffffff";
             c.lineWidth = 2;
         }
