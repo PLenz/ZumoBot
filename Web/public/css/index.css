@@ -13,8 +13,27 @@ canvas {
     display: block;
     position: absolute;
 }
+
+  .sixteen-nine {
+  position: relative;
+}
+.sixteen-nine:before {
+  display: block;
+  content: "";
+  width: 100%;
+  padding-top: 56.25%;
+}
+.sixteen-nine > .content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .container {
     width: auto;
     text-align: center;
     background-color: #ff0000;
 }
+
