@@ -54,17 +54,15 @@ JoystickView = Backbone.View.extend({
     },
     _sendSocket: function() {
       if (self.temp.length  > 0) {
-        var connection = new WebSocket('ws://172.24.1.1:8081/ws');
-        connection.onopen = function () {
-            var value = self.temp[self.temp.length - 1];
-            connection.send(value);
-            console.log(value);
-        };
+         var coordinates = self.temp.pop();
+            zumo.move(coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
+            console.log(coordinates);
+            self.temp = [];
       }
 
       setTimeout(function(){
         self._sendSocket();
-      }, 1000);
+      }, 1000/60);
     },
     _retractJoystickForInactivity: function(){
         var framesPerSec = 15;
@@ -140,8 +138,7 @@ JoystickView = Backbone.View.extend({
         this.trigger("horizontalMove", xPercent);
         this.trigger("verticalMove", yPercent);
 
-        var value = JSON.stringify([xPercent * 255, xneg, yPercent * 255, yneg]);
-        self.temp.push(value);
+        self.temp.push([xPercent * 255, xneg, yPercent * 255, yneg]);
     },
     _mutateToCartesian: function(x, y){
         x -= (this.squareSize) / 2;

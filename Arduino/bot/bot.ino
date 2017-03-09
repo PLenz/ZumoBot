@@ -113,7 +113,7 @@ void receiveEvent(int count) {
       int y = Wire.read();
       int y_neg = Wire.read();
 
-      if (y_neg == 0)
+      if (y_neg == 1)
         throttle = y * -1;
       else
         throttle = y;

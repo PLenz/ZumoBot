@@ -3,14 +3,41 @@
         <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
         <script type="text/javascript" src="js/underscore-min.js"></script>
         <script type="text/javascript" src="js/backbone-min.js"></script>
+        <script type="text/javascript" src="js/zumo.js"></script>
         <script type="text/javascript" src="js/joystick_view.js"></script>
         <script type="text/javascript" src="http-live-player.js"></script>
     </head>
     <body>
 
-      <button type="button" onclick="wsavc.playStream()">Start Video</button>
-      <button type="button" onclick="wsavc.stopStream()">Stop Video</button>
-      <button type="button" onclick="wsavc.disconnect()">Disconnect</button>
+<style>
+    .sixteen-nine {
+  position: relative;
+}
+.sixteen-nine:before {
+  display: block;
+  content: "";
+  width: 100%;
+  padding-top: 56.25%;
+}
+.sixteen-nine > .content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+    #joystickContent{
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+    }
+    
+    #joystickCanvas{
+
+    }
+
+</style>
 
 
     <script type="text/html" id="joystick-view">
@@ -25,16 +52,32 @@
         y: <span id="yVal"></span><br/>
     </div>
 
-    <script type="text/javascript">
+    <div class="sixteen-nine">
+        <div id="content" class="content">
+        </div>
+    </div>
 
+    <script type="text/javascript">
+    var content = document.getElementById("content");
     var canvas = document.createElement("canvas");
-    document.body.appendChild(canvas);
+    canvas.style.cssText = 'position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;';
+    content.appendChild(canvas);
 
     // Create h264 player
-    var uri = "ws://" + document.location.host;
+    var uri = 'ws://'+ location.hostname +':8080';
     var wsavc = new WSAvcPlayer(canvas, 'webgl', 1, 35);
     window.wsavc = wsavc;
     wsavc.connect(uri);
+
+    function startStream(){
+        if(wsavc && wsavc.ws.readyState === 1){
+            wsavc.playStream();
+        }
+        else{
+            setTimeout(startStream, 60);
+        }
+    }
+
         $(document).ready(function(){
             var joystickView = new JoystickView(150, function(callbackView){
                 $("#joystickContent").append(callbackView.render().el);
@@ -48,16 +91,11 @@
             joystickView.bind("horizontalMove", function(x){
                 $("#xVal").html(x);
             });
-            setTimeout(function(){
 
-              console.log(wsavc);
-              //wsavc.playStream();
-
-
-            }, 1500);
+             startStream();
 
         });
-
     </script>
+
     </body>
 </html>

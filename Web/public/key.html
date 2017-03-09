@@ -18,36 +18,40 @@
     </div>
 
     <script type="text/javascript">
-    function send(x, xneg, y, yneg) {
-      var connection = new WebSocket('ws://172.24.1.1:8081/ws');
-      connection.onopen = function () {
-          var value = JSON.stringify([x, xneg, y, yneg]);
-          connection.send(value);
-          console.log(value);
-      };
+    var connection = new WebSocket('ws://' + location.hostname + ':8082');
+
+    function send(message) {
+      //TODO check connection readyState
+      var json = JSON.stringify(message);
+          connection.send(json);
+          console.log(message);
     }
-    function mode(state) {
-      var connection = new WebSocket('ws://172.24.1.1:8081/mode');
-      connection.onopen = function () {
-          var value = JSON.stringify([state]);
-          connection.send(value);
-          console.log(value);
-      };
+
+    function move(x, xneg, y, yneg){
+      send({
+              mode : 1,
+              data : [x, xneg, y, yneg]
+      });
     }
+
+    function mode(value){
+      send({mode : value});
+    }
+  
     function upFunction() {
-      send(0,0,255,0);
+      move(0,0,255,0);
     }
     function downFunction() {
-      send(0,0,255,1);
+      move(0,0,255,1);
     }
     function leftFunction() {
-      send(255,0,0,0);
+      move(255,0,0,0);
     }
     function rightFunction() {
-      send(255,1,0,0);
+      move(255,1,0,0);
     }
     function stopFunction() {
-      send(0,0,0,0);
+      move(0,0,0,0);
     }
     function offFunction() {
       mode(0);
