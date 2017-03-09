@@ -13,6 +13,10 @@
 </head>
 
 <body>
+    <button id="offModeButton" onclick="zumoOffMode()">Off</button>
+    <button id="driveModeButton" onclick="zumoDriveMode()">Drive</button>
+    <button id="scanModeButton" onclick="zumoScanMode()">Scan</button>
+
     <div id="content" class="content">
     </div>
 
@@ -40,6 +44,25 @@
 
         if (is_touch_device() == false) {
             TouchEmulator();
+        }
+
+        var mode = 0;
+
+        function setMode(mode) {
+          mode = mode;
+          zumo.mode(mode);
+        }
+
+        function zumoOffMode() {
+          setMode(0);
+        }
+
+        function zumoDriveMode() {
+          setMode(1);
+        }
+
+        function zumoScanMode() {
+          setMode(2);
         }
 
         var canvas,
