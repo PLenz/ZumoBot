@@ -135,15 +135,15 @@
                     var x_neg = 0;
                     var y_neg = 0;
 
-                    if (x > 100)
-                        x = 100;
-                    else if (x < -100)
-                        x = -100;
+                    if (x > 255)
+                        x = 255;
+                    else if (x < -255)
+                        x = -255;
                     x = x * -1;
-                    if (y > 100)
-                        y = 100;
-                    else if (y < -100)
-                        y = -100;
+                    if (y > 255)
+                        y = 255;
+                    else if (y < -255)
+                        y = -255;
                     y = y * -1;
 
                     if (x < 0) {
@@ -152,7 +152,7 @@
                     if (y < 0) {
                         y_neg = 1;
                     }
-                    zumo.move(parseInt(Math.abs(x * 2.55)), x_neg, parseInt(Math.abs(y * 2.55)), y_neg);
+                    zumo.move(Math.abs(x), x_neg, Math.abs(y), y_neg);
                     break;
                 }
             }
