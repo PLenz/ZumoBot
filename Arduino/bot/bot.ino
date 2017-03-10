@@ -4,7 +4,7 @@
 const int MAX_SPEED = 400;
 const byte LED = 13;
 const int deadZone = 10;
-
+byte state = 0;
 ZumoMotors motors;
 
 void setup() {
@@ -28,14 +28,21 @@ void clear(int count) {
 void receiveEvent(int count) {
   int mode = Wire.read();
   count--;
-  if (mode == 1) {
+  if (mode == 0) {
+    if (count == 1) {
+      int state = Wire.read();
+    }
+  } else if (mode == 1) {
     if (count == 4) {
 
       int x = Wire.read();
+      count--;
       int x_neg = Wire.read();
+      count--;
       int y = Wire.read();
+      count--;
       int y_neg = Wire.read();
-      count = count - 4;
+      count--;
 
       int throttle, direc = 0;
 
@@ -70,12 +77,10 @@ void receiveEvent(int count) {
       leftMotorScaled = constrain(leftMotor / maxMotorScale, -400, 400);
       rightMotorScaled = constrain(rightMotor / maxMotorScale, -400, 400);
 
-      if (abs(leftMotorScaled) >= 245 && abs(rightMotorScaled) >= 245) {
-        motors.setLeftSpeed(MAX_SPEED);
+      if (leftMotorScaled >= 240 && rightMotorScaled >= 240) {
+        motors.setLeftSpeed(MAX_SPEED); 
         motors.setRightSpeed(MAX_SPEED);
-        Serial.println("max");
       } else {
-        //Serial.println("left: " + String(leftMotorScaled) + " right: " + String(rightMotorScaled));
         if (abs(leftMotorScaled) > deadZone)
           motors.setLeftSpeed(leftMotorScaled);
         else
@@ -89,7 +94,8 @@ void receiveEvent(int count) {
       delay(10);
     }
   }
-  clear(count);
+  if (count > 0)
+    clear(count);
 }
 
 
