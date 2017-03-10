@@ -13,6 +13,7 @@
 </head>
 
 <body>
+<<<<<<< HEAD
     <div class="layerSwitchO"><img src="/img/rotate.gif"></img></div>
     <div class="menu">
         <button class="menuButton">Play Sound</button>
@@ -20,6 +21,11 @@
         <button class="menuButton">Line Follow</button>
         <button class="menuButton">Autopilot</button>
     </div>
+=======
+    <button id="offModeButton" onclick="zumoOffMode()">Off</button>
+    <button id="driveModeButton" onclick="zumoDriveMode()">Drive</button>
+    <button id="scanModeButton" onclick="zumoScanMode()">Scan</button>
+>>>>>>> fc2926ac96e5f06dcf10a5ca5474213e2e22f6c8
 
     <div id="content" class="content">
         <button class="mainButton">Menu</button>
@@ -49,6 +55,25 @@
 
         if (is_touch_device() == false) {
             TouchEmulator();
+        }
+
+        var mode = 0;
+
+        function setMode(mode) {
+          mode = mode;
+          zumo.mode(mode);
+        }
+
+        function zumoOffMode() {
+          setMode(0);
+        }
+
+        function zumoDriveMode() {
+          setMode(1);
+        }
+
+        function zumoScanMode() {
+          setMode(2);
         }
 
         var canvas,
