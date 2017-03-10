@@ -37,7 +37,7 @@ class _Server {
   }
 
   get_feed() {
-    throw new Error("to be implemented"); // LOL
+    throw new Error("to be implemented");//TODO
   }
 
   broadcast(data) {
@@ -83,7 +83,8 @@ class _Server {
     socket.on('close', function() {
       try{
         console.log('stopping client interval');
-        spawn('killall',['raspivid']);
+          console.log('Killing raspvid');
+          spawn('killall',['raspivid']);
         //self.readStream.end();
         self.readStream = null;
       }
