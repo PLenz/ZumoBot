@@ -19,16 +19,23 @@ void setup() {
 void loop() {
 }
 
+void clear(int count) {
+  for(int i = 0; i < count; i++) {
+      Wire.read();
+    }
+}
+
 void receiveEvent(int count) {
   int mode = Wire.read();
-
+  count--;
   if (mode == 1) {
-    if (count == 5) {
+    if (count == 4) {
 
       int x = Wire.read();
       int x_neg = Wire.read();
       int y = Wire.read();
       int y_neg = Wire.read();
+      count = count - 4;
 
       int throttle, direc = 0;
 
@@ -80,15 +87,9 @@ void receiveEvent(int count) {
           motors.setRightSpeed(0);
       }
       delay(10);
-
-    } else {
-
-      for (int i = 0; i < count - 1; i++) {
-        Wire.read();
-      }
-
     }
   }
+  clear(count);
 }
 
 
