@@ -22,10 +22,10 @@
 
     <nav class="off-canvas-menu">
         <ul>
-            <li><a href="#" onclick="zumo.playSound()"><i class="fa fa-music" aria-hidden="true"></i> Play Sound</a></li>
-            <li><a href="#" onclick="zumo.driveMode()"><i class="fa fa-car" aria-hidden="true"></i> Drive Mode</a></li>
-            <li><a href="#" onclick="zumo.lineMode()"><i class="fa fa-map-signs" aria-hidden="true"></i> Line Follow</a></li>
-            <li><a href="#" onclick="zumo.autoPilot()"><i class="fa fa-plane" aria-hidden="true"></i> Autopilot</a></li>
+            <li><a href="#" onclick="zumo.playSound(); clearMenu();"><i class="fa fa-music" aria-hidden="true"></i> Play Sound</a></li>
+            <li><a href="#" onclick="zumo.driveMode(); clearMenu();"><i class="fa fa-car" aria-hidden="true"></i> Drive Mode</a></li>
+            <li><a href="#" onclick="zumo.lineMode(); clearMenu();"><i class="fa fa-map-signs" aria-hidden="true"></i> Line Follow</a></li>
+            <li><a href="#" onclick="zumo.autoPilot(); clearMenu();"><i class="fa fa-plane" aria-hidden="true"></i> Autopilot</a></li>
         </ul>
     </nav>
     
@@ -44,6 +44,7 @@
         var wsavc = new WSAvcPlayer(stream, 'webgl', 1, 35);
         window.wsavc = wsavc;
         wsavc.connect(uri);
+        
         function startStream() {
             if (wsavc && wsavc.ws.readyState === 1) {
                 wsavc.playStream();
@@ -51,21 +52,24 @@
                 setTimeout(startStream, 60);
             }
         }
+        
         startStream();
+        
         if (is_touch_device() == false) {
             TouchEmulator();
         }
+        
         var mode = 0;
         function setMode(mode) {
           mode = mode;
           zumo.mode(mode);
         }
-        function zumoDriveMode() {
-          setMode(1);
+        
+        /* Deactivates the Menu */
+        function clearMenu() {
+          document.getElementById('off-canvas-menu').checked = false;
         }
-        function zumoScanMode() {
-          setMode(2);
-        }
+        
         var canvas,
             c, // c is the canvas' context 2D
             container,
