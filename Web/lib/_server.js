@@ -14,8 +14,8 @@ class _Server {
   constructor(server, options) {
 
     this.options = merge({
-        width : 960,
-        height: 540,
+        width : 640,
+        height: 360,
     }, options);
 
     this.wss = new WebSocketServer({port: 8080, server });
