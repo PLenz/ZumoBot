@@ -1,3 +1,4 @@
 Web/node_modules
 .DS_Store
 .vscode
+Web/npm-debug.log

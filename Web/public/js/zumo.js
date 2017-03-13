@@ -26,7 +26,40 @@
             });
         }
 
+        function playSound() {
+             send({
+                    mode : 2,
+                    data : [state]
+            });
+        }
+
+        function driveMode() {
+             send({
+                    mode : 0,
+                    data : [state]
+            });
+        }
+
+        function lineMode() {
+             send({
+                    mode : 0,
+                    data : [state]
+            });
+        }
+
+        function autoPilot() {
+             send({
+                    mode : 0,
+                    data : [state]
+            });
+        }
+
     return {
             move : move,
+            playSound : playSound,
+            driveMode : driveMode,
+            lineMode  : lineMode,
+            autoPilot : autoPilot            
     };
+    
 })();
