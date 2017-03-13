@@ -26,28 +26,28 @@
             });
         }
 
-        function playSound() {
+        function playSound(state) {
              send({
                     mode : 2,
                     data : [state]
             });
         }
 
-        function driveMode() {
+        function driveMode(state) {
              send({
                     mode : 0,
                     data : [state]
             });
         }
 
-        function lineMode() {
+        function lineMode(state) {
              send({
                     mode : 0,
                     data : [state]
             });
         }
 
-        function autoPilot() {
+        function autoPilot(state) {
              send({
                     mode : 0,
                     data : [state]
@@ -61,5 +61,5 @@
             lineMode  : lineMode,
             autoPilot : autoPilot            
     };
-    
+
 })();
