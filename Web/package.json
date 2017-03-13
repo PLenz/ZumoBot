@@ -20,5 +20,7 @@
     "stream-throttle": "^0.1.3",
     "ws": "^0.8.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "webpack": "^2.2.1"
+  }
 }

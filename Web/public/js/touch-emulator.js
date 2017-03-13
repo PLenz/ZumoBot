@@ -336,7 +336,7 @@
             width: size + 'px',
             padding: 0,
             margin: 0,
-            display: 'block',
+            display: 'none',
             overflow: 'hidden',
             pointerEvents: 'none',
             webkitUserSelect: 'none',

@@ -4,7 +4,8 @@
 <head>
     <meta charset=utf-8>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
-    <link rel="stylesheet" media = ""  href="css/index.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <script type="text/javascript" src="js/zumo.js"></script>
     <script type="text/javascript" src="http-live-player.js"></script>
     <script type="text/javascript" src="js/touch-emulator.js"></script>
@@ -14,30 +15,35 @@
 
 <body>
     <div class="layerSwitchO"><img src="/img/rotate.gif"></img></div>
-    <div class="menu">
-        <button class="menuButton">Play Sound</button>
-        <button class="menuButton" onclick="zumoDriveMode()">Drive Mode</button>
-        <button class="menuButton">Disco</button>
-        <button class="menuButton" onclick="zumoScanMode()">Line Follow</button>
-        <button class="menuButton">Autopilot</button>
-        <button class="menuButton" id="motionButton">Device Motion</button>
-    </div>
+    <input type="checkbox" id="off-canvas-menu">
+  <label for="off-canvas-menu" class="off-canvas-menu-label"><i class="fa fa-bars"></i></label>
+
+  <div class="overlay"></div>
+
+    <nav class="off-canvas-menu">
+        <ul>
+            <li><a href="#" onclick="zumoPlaySound()"><i class="fa fa-music" aria-hidden="true"></i> Play Sound</a></li>
+            <li><a href="#" onclick="zumoDriveMode()"><i class="fa fa-car" aria-hidden="true"></i> Drive Mode</a></li>
+            <li><a href="#" onclick="zumoScanMode()"><i class="fa fa-map-signs" aria-hidden="true"></i> Line Follow</a></li>
+            <li><a href="#" onclick="zumoAutoPilot()"><i class="fa fa-plane" aria-hidden="true"></i> Autopilot</a></li>
+        </ul>
+    </nav>
+    
+    
     <div id="content" class="content">
-        <button class="mainButton">Menu</button>
+        <canvas id="joystick"></canvas>
     </div>
 
     <script>
         var content = document.getElementById("content");
-        var canvas = document.createElement("canvas");
-        canvas.style.cssText = 'position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;';
-        content.appendChild(canvas);
-
+        var stream = document.createElement("canvas");
+        stream.style.cssText = 'position: fixed;top: 0;left: 0;width: 100vw;height: 100vh;';
+        content.appendChild(stream);
         // Create h264 player
         var uri = 'ws://' + location.hostname + ':8080';
-        var wsavc = new WSAvcPlayer(canvas, 'webgl', 1, 35);
+        var wsavc = new WSAvcPlayer(stream, 'webgl', 1, 35);
         window.wsavc = wsavc;
         wsavc.connect(uri);
-
         function startStream() {
             if (wsavc && wsavc.ws.readyState === 1) {
                 wsavc.playStream();
@@ -45,28 +51,21 @@
                 setTimeout(startStream, 60);
             }
         }
-
         startStream();
-
         if (is_touch_device() == false) {
             TouchEmulator();
         }
-
         var mode = 0;
-
         function setMode(mode) {
           mode = mode;
           zumo.mode(mode);
         }
-
         function zumoDriveMode() {
           setMode(1);
         }
-
         function zumoScanMode() {
           setMode(2);
         }
-
         var canvas,
             c, // c is the canvas' context 2D
             container,
@@ -76,19 +75,17 @@
             leftTouchPos = new Vector2(0, 0),
             leftTouchStartPos = new Vector2(0, 0),
             leftVector = new Vector2(0, 0);
-
+        
         setupCanvas();
-
+        
         var touchable = 'createTouch' in document,
             touches = [];
-
         setInterval(draw, 1000 / 35);
-
+       
         if (touchable) {
             canvas.addEventListener('touchstart', onTouchStart, false);
             canvas.addEventListener('touchmove', onTouchMove, false);
             canvas.addEventListener('touchend', onTouchEnd, false);
-
             window.onorientationchange = resetCanvas;
             window.onresize = resetCanvas;
         }
@@ -159,7 +156,6 @@
                     var y = leftVector.y;
                     var x_neg = 0;
                     var y_neg = 0;
-
                     if (x > 255)
                         x = 255;
                     else if (x < -255)
@@ -170,7 +166,6 @@
                     else if (y < -255)
                         y = -255;
                     y = y * -1;
-
                     if (x < 0) {
                         x_neg = 1;
                     }
@@ -198,11 +193,9 @@
         }
 
         function setupCanvas() {
-            canvas = document.createElement('canvas');
+            canvas = document.getElementById("joystick");
             c = canvas.getContext('2d');
-            container = document.createElement('div');
-            container.className = "container";
-            document.body.appendChild(container);
+            container = document.getElementById("content");
             container.appendChild(canvas);
             resetCanvas();
             c.strokeStyle = "#ffffff";
