@@ -75,24 +75,23 @@ void receiveEvent(int count) {
 }
 
 void drive(int x, int x_neg, int y, int y_neg) {
-  int throttle, direc = 0;
+  int y_axis, x_axis = 0;
 
   if (x_neg == 1)
-    direc = x * -1;
+    x_axis = x;
   else
-    direc = x;
-  direc = direc * -1;
+    x_axis = x * -1;
 
   if (y_neg == 1)
-    throttle = y * -1;
+    y_axis = y * -1;
   else
-    throttle = y;
+    y_axis = y;
 
   int leftMotor, rightMotor = 0;
   float leftMotorScale, rightMotorScale, maxMotorScale = 0;
 
-  leftMotor = throttle + direc;
-  rightMotor = throttle - direc;
+  leftMotor = y_axis + x_axis;
+  rightMotor = y_axis - x_axis;
 
   leftMotorScale = leftMotor / 400.0;
   leftMotorScale = abs(leftMotorScale);
